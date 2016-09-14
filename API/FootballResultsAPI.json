@@ -63,7 +63,7 @@
                         "description": "Season to be added",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/season"
+                            "$ref": "#/definitions/minimalSeason"
                         }
                     }
                 ],
@@ -77,7 +77,7 @@
 							}
                         },
                         "schema": {
-                            "$ref": "#/definitions/season"
+                            "$ref": "#/definitions/minimalSeason"
                         }
                     },
                     "default": {
@@ -133,6 +133,42 @@
         }
     },
     "definitions": {
+        
+        
+        
+        
+        
+        
+        
+        "minimalSeason": {
+            "type": "object",
+            "required": [
+                "seasonNumber"
+            ],
+            "properties": {
+                "seasonNumber": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "href": {
+                    "type": "string",
+                    "format": "URL"
+                }
+            }
+        },
+        
+        "seasonList": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/minimalSeason"
+                    }
+                }
+            }
+        },
+        
         "season": {
             "type": "object",
             "required": [
@@ -142,20 +178,67 @@
                 "seasonNumber": {
                     "type": "integer",
                     "format": "int64"
-                }
-            }
-        },
-        "seasonList": {
-            "type": "object",
-            "properties": {
-                "data": {
+                },
+                "href": {
+                    "type": "string",
+                    "format": "URL"
+                },
+                "divisions": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/season"
+                        "$ref": "#/definitions/divisionInSeason"
                     }
                 }
             }
         },
+        
+        "divisionInSeason": {
+            "type": "object",
+            "required": [
+                "divisionId"
+            ],
+            "properties": {
+                "divisionId": {
+                    "type": "string"
+                },
+                "position": {
+                    "type": "integer"
+                },
+                "divisionName": {
+                    "type": "string"
+                },
+                "href": {
+                    "type": "string",
+                    "format": "URL"
+                },
+                "teams": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/teamsInDivision"
+                    }
+                }
+            }
+        },
+        
+        "teamsInDivision": {
+            "type": "object",
+            "required": [
+                "teamId"
+            ],
+            "properties": {
+                "teamId": {
+                    "type": "string"
+                },
+                "teamName": {
+                    "type": "string"
+                },
+                "href": {
+                    "type": "string",
+                    "format": "URL"
+                }
+            }
+        },
+        
         "errors": {
 			"type": "array",
 			"items": {
