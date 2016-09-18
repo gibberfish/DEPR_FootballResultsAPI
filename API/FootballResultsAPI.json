@@ -132,31 +132,30 @@
             }
         }
     },
+	
+	
+	
     "definitions": {
-        
-        
-        
-        
-        
-        
-        
         "minimalSeason": {
             "type": "object",
             "required": [
                 "seasonNumber"
             ],
             "properties": {
-                "seasonNumber": {
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "href": {
-                    "type": "string",
-                    "format": "URL"
-                }
+				"seasonNumber": {
+					"type": "integer",
+					"format": "int64"
+				},
+				"links": {
+					"properties": {
+						"self": {
+							"type": "string",
+							"format":"url"
+						}
+					}
+				}
             }
         },
-        
         "seasonList": {
             "type": "object",
             "properties": {
@@ -168,7 +167,6 @@
                 }
             }
         },
-        
         "season": {
             "type": "object",
             "required": [
@@ -191,54 +189,74 @@
                 }
             }
         },
-        
         "divisionInSeason": {
             "type": "object",
-            "required": [
-                "divisionId"
-            ],
             "properties": {
-                "divisionId": {
-                    "type": "string"
-                },
-                "position": {
-                    "type": "integer"
-                },
-                "divisionName": {
-                    "type": "string"
-                },
-                "href": {
-                    "type": "string",
-                    "format": "URL"
-                },
-                "teams": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/teamsInDivision"
-                    }
-                }
+				"attributes": {
+					"properties": {
+						"divisionId": {
+							"type": "string"
+						},
+						"position": {
+							"type": "integer"
+						},
+						"divisionName": {
+							"type": "string"
+						}
+					}
+				},
+				"relationships": {
+					"properties": {
+						"teams": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/teamInDivision"
+									}
+								}
+							}
+						},
+						"links": {
+							"properties": {
+								"division": {
+									"type": "string",
+									"format":"url"
+								}
+							}
+						}
+					}
+				}
             }
         },
-        
-        "teamsInDivision": {
+        "teamInDivision": {
             "type": "object",
-            "required": [
-                "teamId"
-            ],
             "properties": {
-                "teamId": {
-                    "type": "string"
-                },
-                "teamName": {
-                    "type": "string"
-                },
-                "href": {
-                    "type": "string",
-                    "format": "URL"
-                }
+				"attributes": {
+					"properties": {
+						"teamId": {
+							"type": "string"
+						},
+						"teamName": {
+							"type": "string"
+						}
+					}
+				},
+				"relationships": {
+					"properties": {
+						"links": {
+							"properties": {
+								"team": {
+									"type": "string",
+									"format":"url"
+								}
+							}
+						}
+					}
+				}
             }
         },
-        
         "errors": {
 			"type": "array",
 			"items": {
