@@ -1,66 +1,12 @@
 ---------------------------------------------------------------------------------------------------------
-FULL EXAMPLE
----------------------------------------------------------------------------------------------------------
-{
-    "data": [
-        {
-            "type": "season",
-            "id": "2015",
-            "relationships": {
-                "divisions": {
-                    "links" : {
-                        "self": "http://mindbadger.com/seasons/2015/relationships/divisions",
-                        "related": "http://mindbadger.com/seasons/2015/divisions"
-                    },
-                    "data": [
-                        {"type": "divisionInSeason", "id": "2015-1"},
-                        {"type": "divisionInSeason", "id": "2015-2"}
-                    ]
-                }
-            },
-            "links": {
-                "self": "http://mindbadger.com/seasons/2015"
-            }
-        }
-    ],
-    "included": [
-        {
-            "type": "divisionInSeason",
-            "id": "2015-1",
-            "attributes": {
-                "position": "1"
-            },
-            "relationships": {
-                "division": {
-                    "links" : {
-                        "self": "http://mindbadger.com/seasons/2015/relationships/divisions/1",
-                        "related": "http://mindbadger.com/divisions/1"
-                    },
-                    "data": [
-                        {"type": "division", "id": "1"}
-                    ]                                    
-                },
-                "teams" : {
-                    "links" : {
-                        "self": "http://mindbadger.com/seasons/2015/relationships/divisions/1/teams",
-                        "related": "http://mindbadger.com/seasons/2015/divisions/1/teams"
-                    },
-                    "data": [
-                        {"type": "teamInDivision", "id": "2015-1-131"},
-                        {"type": "teamInDivision", "id": "2015-1-142"}
-                    ]                    
-                }
-            }
-        }
-    ]
-}
-
----------------------------------------------------------------------------------------------------------
 season
 ---------------------------------------------------------------------------------------------------------
 {
     "type": "season",
     "id": "2015",
+    "links": {
+        "self": "http://mindbadger.com/seasons/2015"
+    },
     "relationships": {
         "divisions": {
             "links" : {
@@ -72,9 +18,6 @@ season
                 {"type": "divisionInSeason", "id": "2015-2"}
             ]
         }
-    },
-    "links": {
-        "self": "http://mindbadger.com/seasons/2015"
     }
 }
 
@@ -84,6 +27,9 @@ divisionInSeason
 {
     "type": "divisionInSeason",
     "id": "2015-1",
+    "links": {
+        "self": "http://mindbadger.com/seasons/2015/divisions/1"
+    },
     "attributes": {
         "position": "1"
     },
@@ -160,3 +106,63 @@ team
 ---------------------------------------------------------------------------------------------------------
 fixture
 ---------------------------------------------------------------------------------------------------------
+
+
+
+---------------------------------------------------------------------------------------------------------
+FULL EXAMPLE
+---------------------------------------------------------------------------------------------------------
+{
+    "data": [
+        {
+            "type": "season",
+            "id": "2015",
+            "relationships": {
+                "divisions": {
+                    "links" : {
+                        "self": "http://mindbadger.com/seasons/2015/relationships/divisions",
+                        "related": "http://mindbadger.com/seasons/2015/divisions"
+                    },
+                    "data": [
+                        {"type": "divisionInSeason", "id": "2015-1"},
+                        {"type": "divisionInSeason", "id": "2015-2"}
+                    ]
+                }
+            },
+            "links": {
+                "self": "http://mindbadger.com/seasons/2015"
+            }
+        }
+    ],
+    "included": [
+        {
+            "type": "divisionInSeason",
+            "id": "2015-1",
+            "attributes": {
+                "position": "1"
+            },
+            "relationships": {
+                "division": {
+                    "links" : {
+                        "self": "http://mindbadger.com/seasons/2015/relationships/divisions/1",
+                        "related": "http://mindbadger.com/divisions/1"
+                    },
+                    "data": [
+                        {"type": "division", "id": "1"}
+                    ]                                    
+                },
+                "teams" : {
+                    "links" : {
+                        "self": "http://mindbadger.com/seasons/2015/relationships/divisions/1/teams",
+                        "related": "http://mindbadger.com/seasons/2015/divisions/1/teams"
+                    },
+                    "data": [
+                        {"type": "teamInDivision", "id": "2015-1-131"},
+                        {"type": "teamInDivision", "id": "2015-1-142"}
+                    ]                    
+                }
+            }
+        }
+    ]
+}
+

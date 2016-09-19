@@ -132,9 +132,7 @@
             }
         }
     },
-	
-	
-	
+		
     "definitions": {
         "minimalSeason": {
             "type": "object",
@@ -167,13 +165,36 @@
                 }
             }
         },
+        
+	/*
+{
+    "type": "season",
+    "id": "2015",
+    "links": {
+        "self": "http://mindbadger.com/seasons/2015"
+    },
+    "relationships": {
+        "divisions": {
+            "links" : {
+                "self": "http://mindbadger.com/seasons/2015/relationships/divisions",
+                "related": "http://mindbadger.com/seasons/2015/divisions"
+            },
+            "data": [
+                {"type": "divisionInSeason", "id": "2015-1"},
+                {"type": "divisionInSeason", "id": "2015-2"}
+            ]
+        }
+    }
+}
+    */
+
         "season": {
             "type": "object",
             "required": [
-                "seasonNumber"
+                "id"
             ],
             "properties": {
-                "seasonNumber": {
+                "id": {
                     "type": "integer",
                     "format": "int64"
                 },
