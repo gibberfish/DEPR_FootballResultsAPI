@@ -8,6 +8,19 @@ Desktop.ini
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
+APIApp/*
+.classpath
+.project
+.settings/
+target/
+football-api-impl/target/
+SwaggerCodegenExtension/modules/swagger-codegen/target/
+SwaggerCodegenExtension/modules/swagger-codegen-cli/target/
+SwaggerCodegenExtension/modules/swagger-codegen-maven-plugin/target/
+SwaggerCodegenExtension/modules/swagger-generator/target/
+SwaggerParser/modules/swagger-compat-spec-parser/target/
+SwaggerParser/modules/swagger-parser/target/
+
 # Windows Installer files
 *.cab
 *.msi

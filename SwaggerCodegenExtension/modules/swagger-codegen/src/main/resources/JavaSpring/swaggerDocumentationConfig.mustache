@@ -1,0 +1,109 @@
+package {{configPackage}};
+
+import com.kingfisher.configuration.*;
+
+import org.apache.catalina.connector.Connector;
+import org.apache.coyote.http11.Http11NioProtocol;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
+import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.core.io.ClassPathResource;
+
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+
+import java.io.File;
+import java.io.IOException;
+
+{{>generatedAnnotation}}
+@Configuration
+@Import({MockConfig.class, WebConfig.class})
+public class SwaggerDocumentationConfig {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SwaggerDocumentationConfig.class);
+
+    @Value("${ssl.enabled:false}")
+    private boolean shouldUseSsl;
+    @Value("${ssl.keystore:}")
+    private String keystoreLocation;
+    @Value("${ssl.keystore.pass:}")
+    private String keystorePassword;
+    @Value("${ssl.keystore.alias:}")
+    private String keystoreAlias;
+    @Value("${ssl.scheme:https}")
+    private String sslScheme;
+    @Value("${ssl.port:443}")
+    private int sslPort;
+
+    ApiInfo apiInfo() {
+        return new ApiInfoBuilder()
+            .title("{{appName}}")
+            .description("{{{appDescription}}}")
+            .license("{{licenseInfo}}")
+            .licenseUrl("{{licenseUrl}}")
+            .termsOfServiceUrl("{{infoUrl}}")
+            .version("{{appVersion}}")
+            .contact(new Contact("","", "{{infoEmail}}"))
+            .build();
+    }
+
+	@Bean
+	public EmbeddedServletContainerFactory servletContainer() {
+		TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory();
+
+		if (shouldUseSsl) {
+			tomcat.addAdditionalTomcatConnectors(createSslConnector());
+		}
+
+		return tomcat;
+	}
+
+    private Connector createSslConnector() {
+        Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+        Http11NioProtocol protocol = (Http11NioProtocol) connector.getProtocolHandler();
+        try {
+            File keystore = new ClassPathResource(keystoreLocation).getFile();
+            connector.setScheme(sslScheme);
+            connector.setSecure(true);
+            connector.setPort(sslPort);
+            protocol.setSSLEnabled(true);
+            protocol.setKeystoreFile(keystore.getAbsolutePath());
+            protocol.setKeystorePass(keystorePassword);
+            protocol.setKeyAlias(keystoreAlias);
+            return connector;
+        }
+        catch (IOException ex) {
+            LOG.error("can't access keystore: [" + "keystore"
+                    + "]", ex);
+            throw new IllegalStateException(ex);
+        }
+    }
+	
+    @Bean
+    public Docket customImplementation(){
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                    .apis(RequestHandlerSelectors.basePackage("{{apiPackage}}"))
+                    .build()
+                {{#java8}}
+                .directModelSubstitute(java.time.LocalDate.class, java.sql.Date.class)
+                .directModelSubstitute(java.time.OffsetDateTime.class, java.util.Date.class)
+                {{/java8}}
+                {{^java8}}
+                .directModelSubstitute(org.joda.time.LocalDate.class, java.sql.Date.class)
+                .directModelSubstitute(org.joda.time.DateTime.class, java.util.Date.class)
+                {{/java8}}
+                .apiInfo(apiInfo());
+    }
+}

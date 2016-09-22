@@ -1,0 +1,21 @@
+package {{package}};
+
+import java.util.Arrays;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.swagger.serialization.KFDateTimeDeserializer;
+import io.swagger.serialization.KFDateTimeSerializer;
+{{#imports}}import {{import}};
+{{/imports}}
+
+{{#serializableModel}}import java.io.Serializable;{{/serializableModel}}
+{{#models}}
+{{#model}}{{#description}}
+/**
+ * {{description}}
+ **/{{/description}}
+{{#isEnum}}{{>enumOuterClass}}{{/isEnum}}
+{{^isEnum}}{{>pojo}}{{/isEnum}}
+{{/model}}
+{{/models}}

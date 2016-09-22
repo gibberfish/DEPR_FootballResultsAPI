@@ -1,0 +1,27 @@
+{
+	"operations" : [
+	{{#operations}}
+	{{#operation}}
+		{
+			"operationId" : "{{operationId}}",
+			"responses" : [
+				{
+					"requestParameters" : [				
+						{{#allParams}}{
+							"name" : "{{#isPathParam}}{{baseName}}{{/isPathParam}}{{^isPathParam}}{{paramName}}{{/isPathParam}}",
+							"compare" : "contains",
+							"value" : ""
+						}{{#hasMore}},
+						{{/hasMore}}{{/allParams}}
+					],
+					"dataMocked" : true,
+					"modelClassName" : "{{returnType}}"
+				}
+			]
+		}{{#hasMore}},
+		{{/hasMore}}
+	{{/operation}}
+	{{/operations}}
+	
+	]
+}

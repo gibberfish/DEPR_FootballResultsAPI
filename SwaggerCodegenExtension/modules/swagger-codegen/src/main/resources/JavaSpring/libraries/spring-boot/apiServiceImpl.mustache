@@ -1,0 +1,37 @@
+package {{package}};
+
+import mindbadger.api.util.ResponseEntityCreator;
+import io.swagger.annotations.*;
+import io.swagger.model.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Component
+public class {{classname}}ServiceImpl implements {{classname}}Service {
+
+    @Autowired
+    ResponseEntityCreator responseEntityCreator;
+
+	{{#operations}}
+	{{#operation}}
+	@Override
+	public {{#async}}Callable<{{/async}}ResponseEntity<Object>{{#async}}>{{/async}} {{operationId}}({{#allParams}}{{>queryParams}}{{>pathParams}}{{>headerParams}}{{>bodyParams}}{{>formParams}}{{#hasMore}},
+        {{/hasMore}}{{/allParams}}) {
+        final String operationName = "{{operationId}}";
+		final Map<String, String> requestParameters = new HashMap<String, String>();
+        {{#allParams}}requestParameters.put("{{#isPathParam}}{{baseName}}{{/isPathParam}}{{^isPathParam}}{{paramName}}{{/isPathParam}}", String.valueOf({{#isPathParam}}{{baseName}}{{/isPathParam}}{{^isPathParam}}{{paramName}}{{/isPathParam}}));{{#hasMore}}
+		{{/hasMore}}{{/allParams}}
+
+        return responseEntityCreator.createFor(operationName, requestParameters);
+    }
+	{{/operation}}
+	{{/operations}}
+}

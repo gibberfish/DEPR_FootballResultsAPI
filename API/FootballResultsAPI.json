@@ -15,12 +15,6 @@
     "schemes": [
         "http"
     ],
-    "consumes": [
-        "application/vnd.api+json"
-    ],
-    "produces": [
-        "application/vnd.api+json"
-    ],
     "paths": {
         "/seasons": {
             "get": {
@@ -36,7 +30,7 @@
                     "200": {
                         "description": "List of seasons",
                         "schema": {
-                            "$ref": "#/definitions/seasonList"
+                            "$ref": "#/definitions/seasonListResponse"
                         }
                     },
                     "default": {
@@ -63,7 +57,7 @@
                         "description": "Season to be added",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/minimalSeason"
+                            "$ref": "#/definitions/season"
                         }
                     }
                 ],
@@ -77,7 +71,7 @@
 							}
                         },
                         "schema": {
-                            "$ref": "#/definitions/minimalSeason"
+                            "$ref": "#/definitions/fullSeasonResponse"
                         }
                     },
                     "default": {
@@ -113,7 +107,7 @@
                     "200": {
                         "description": "season response",
                         "schema": {
-                            "$ref": "#/definitions/season"
+                            "$ref": "#/definitions/fullSeasonResponse"
                         }
                     },
                     "404": {
@@ -134,160 +128,411 @@
     },
 		
     "definitions": {
-        "minimalSeason": {
-            "type": "object",
-            "required": [
-                "seasonNumber"
-            ],
-            "properties": {
-				"seasonNumber": {
-					"type": "integer",
-					"format": "int64"
+		"season": {
+			"type": "object",
+			"required": ["type"],
+			"properties": {
+				"type": {
+					"type": "string",
+					"enum": ["season"]
+				},
+				"id": {
+					"type": "string"
+				},
+				"relationships": {
+					"properties": {
+						"divisions": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string",
+											"format":"url",
+											"x-path":"/seasons/{seasonId}/relationships/divisions"
+										},
+										"related": {
+											"$ref": "#/definitions/jsonApiRelatedCollection"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/jsonApiResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+				},
+				"links": {
+					"type": "object",
+					"properties": {
+						"self": {
+							"type": "string",
+							"format":"url",
+							"x-path":"/seasons/{seasonId}"
+						}
+					}
+				}
+			}
+		},
+		"divisionInSeason": {
+			"type": "object",
+			"required": ["type"],
+			"properties": {
+				"type": {
+					"type": "string",
+					"enum": ["divisionInSeason"]
+				},
+				"id": {
+					"description": "The composite id of {season}-{divisionId}",
+					"type": "string"
+				},
+				"attributes": {
+					"properties": {
+						"position": {
+							"description": "Position of this division in the season",
+							"type": "integer"
+						}
+					}
+				},
+				"relationships": {
+					"properties": {
+						"division": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"related": {
+											"$ref": "#/definitions/jsonApiRelatedCollection"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/jsonApiResourceIdentifier"
+								}
+							}
+						},
+						"teams": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"self": {
+											"type": "string",
+											"format":"url",
+											"x-path":"/seasons/{seasonId}/divisions/{divisionId}/relationships/teams"
+										},
+										"related": {
+											"$ref": "#/definitions/jsonApiRelatedCollection"
+										}
+									}
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/jsonApiResourceIdentifier"
+									}
+								}
+							}
+						}
+					}
+
+				},
+				"links": {
+					"type": "object",
+					"properties": {
+						"self": {
+							"type": "string",
+							"format":"url",
+							"x-path":"/seasons/{seasonId}/divisions/{divisionId}"
+						}
+					}
+				}
+			}
+		},
+		"teamInDivision": {
+			"type": "object",
+			"required": ["type"],
+			"properties": {
+				"type": {
+					"type": "string",
+					"enum": ["teamInDivision"]
+				},
+				"id": {
+					"description": "The composite id of {season}-{divisionId}-{teamId}",
+					"type": "string"
+				},
+				"relationships": {
+					"properties": {
+						"team": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"related": {
+											"$ref": "#/definitions/jsonApiRelatedCollection"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/jsonApiResourceIdentifier"
+								}
+							}
+						}
+					}
+				},
+				"links": {
+					"type": "object",
+					"properties": {
+						"self": {
+							"type": "string",
+							"format":"url",
+							"x-path":"/seasons/{seasonId}/divisions/{divisionId}"
+						}
+					}
+				}
+			}
+		},
+		"division": {
+			"type": "object",
+			"required": ["type"],
+			"properties": {
+				"type": {
+					"type": "string",
+					"enum": ["division"]
+				},
+				"id": {
+					"description": "The {divisionId}",
+					"type": "string"
+				},
+				"attributes": {
+					"properties": {
+						"name": {
+							"description": "The division name",
+							"type": "string"
+						}
+					}
+				},
+				"links": {
+					"type": "object",
+					"properties": {
+						"self": {
+							"type": "string",
+							"format":"url",
+							"x-path":"/divisions/{divisionId}"
+						}
+					}
+				}
+			}
+		},
+		"team": {
+			"type": "object",
+			"required": ["type"],
+			"properties": {
+				"type": {
+					"type": "string",
+					"enum": ["team"]
+				},
+				"id": {
+					"description": "The {teamId}",
+					"type": "string"
+				},
+				"attributes": {
+					"properties": {
+						"name": {
+							"description": "The team name",
+							"type": "string"
+						}
+					}
+				},
+				"links": {
+					"type": "object",
+					"properties": {
+						"self": {
+							"type": "string",
+							"format":"url",
+							"x-path":"/teams/{teamId}"
+						}
+					}
+				}
+			}
+		},
+		"fixture": {
+			"type": "object",
+			"required": ["type"],
+			"properties": {
+				"type": {
+					"type": "string",
+					"enum": ["fixture"]
+				},
+				"id": {
+					"type": "string"
+				},
+				"attributes": {
+					"properties": {
+						"fixtureDate": {
+							"description": "goals scored by the home team",
+							"type": "string",
+							"format": "date"
+						},
+						"homeGoals": {
+							"description": "goals scored by the home team",
+							"type": "integer",
+							"format": "int32"
+						},
+						"awayGoals": {
+							"description": "goals scored by the away team",
+							"type": "integer",
+							"format": "int32"
+						}
+					}
+				},
+				"relationships": {
+					"properties": {
+						"division": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"related": {
+											"$ref": "#/definitions/jsonApiRelatedCollection"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/jsonApiResourceIdentifier"
+								}
+							}
+						},
+						"homeTeam": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"related": {
+											"$ref": "#/definitions/jsonApiRelatedCollection"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/jsonApiResourceIdentifier"
+								}
+							}
+						},
+						"awayTeam": {
+							"type": "object",
+							"properties": {
+								"links": {
+									"type": "object",
+									"properties": {
+										"related": {
+											"$ref": "#/definitions/jsonApiRelatedCollection"
+										}
+									}
+								},
+								"data": {
+									"$ref": "#/definitions/jsonApiResourceIdentifier"
+								}
+							}
+						}
+					}
+				},
+				"links": {
+					"type": "object",
+					"properties": {
+						"self": {
+							"type": "string",
+							"format":"url",
+							"x-path":"/fixtures/{fixtureId}"
+						}
+					}
+				}
+			}
+		},		
+		"fullSeasonResponse": {
+			"type": "object",
+			"properties": {
+				"data": {
+					"$ref": "#/definitions/season"
+				},
+				"included": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/divisionInSeason"
+					}
 				},
 				"links": {
 					"properties": {
 						"self": {
 							"type": "string",
-							"format":"url"
+							"format":"url",
+							"x-path":"/baskets/{brand}/{basket_id}"
 						}
 					}
 				}
-            }
-        },
-        "seasonList": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/minimalSeason"
-                    }
-                }
-            }
-        },
-        
-	/*
-{
-    "type": "season",
-    "id": "2015",
-    "links": {
-        "self": "http://mindbadger.com/seasons/2015"
-    },
-    "relationships": {
-        "divisions": {
-            "links" : {
-                "self": "http://mindbadger.com/seasons/2015/relationships/divisions",
-                "related": "http://mindbadger.com/seasons/2015/divisions"
-            },
-            "data": [
-                {"type": "divisionInSeason", "id": "2015-1"},
-                {"type": "divisionInSeason", "id": "2015-2"}
-            ]
-        }
-    }
-}
-    */
-
-        "season": {
-            "type": "object",
-            "required": [
-                "id"
-            ],
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "href": {
-                    "type": "string",
-                    "format": "URL"
-                },
-                "divisions": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/divisionInSeason"
-                    }
-                }
-            }
-        },
-        "divisionInSeason": {
-            "type": "object",
-            "properties": {
-				"attributes": {
-					"properties": {
-						"divisionId": {
-							"type": "string"
-						},
-						"position": {
-							"type": "integer"
-						},
-						"divisionName": {
-							"type": "string"
-						}
+			}
+		},
+		"seasonListResponse": {
+			"type": "object",
+			"properties": {
+				"data": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/season"
 					}
-				},
-				"relationships": {
+				}
+			}
+		},
+        "jsonApiRelatedCollection": {
+			"type": "object",
+			"properties": {
+				"href": {
+  					"type": "string",
+  					"format": "URL",
+  					"description": "Link to retrieve the related collection"
+  				},
+				"meta": {
+					"type": "object",
 					"properties": {
-						"teams": {
-							"type": "object",
-							"properties": {
-								"data": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/teamInDivision"
-									}
-								}
-							}
-						},
-						"links": {
-							"properties": {
-								"division": {
-									"type": "string",
-									"format":"url"
-								}
-							}
+						"count": {
+						"type": "integer",
+						"description": "The number of resources in the collection"
 						}
 					}
 				}
-            }
+			}
         },
-        "teamInDivision": {
-            "type": "object",
-            "properties": {
-				"attributes": {
-					"properties": {
-						"teamId": {
-							"type": "string"
-						},
-						"teamName": {
-							"type": "string"
-						}
-					}
-				},
-				"relationships": {
-					"properties": {
-						"links": {
-							"properties": {
-								"team": {
-									"type": "string",
-									"format":"url"
-								}
-							}
-						}
-					}
-				}
-            }
+        "jsonApiResourceIdentifier": {
+			"type": "object",
+			"required": ["type", "id"],
+			"properties": {
+				"type": {
+  					"type": "string"
+  				},
+  				"id": {
+  					"type": "string"
+  				}
+			}
         },
-        "errors": {
+		"errors": {
 			"type": "array",
 			"items": {
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "description": "A unique identifier for this particular occurrence of the problem"
-                    },
-                    "links": {
-                        "type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "A unique identifier for this particular occurrence of the problem"
+					},
+					"links": {
+						"type": "object",
 						"description": "Further details about this particular occurrence of the problem",
 						"properties": {
 							"about": {
@@ -295,32 +540,42 @@
 								"format": "URL"
 							}
 						}
-                    },
-                    "status": {
-                        "type": "string",
-                        "description": "The HTTP status code applicable to this problem"
-                    },
-                    "code": {
-                        "type": "string",
-                        "description": "An application-specific error code"
-                    },
-                    "title": {
-                        "type": "string",
-                        "description": "A short, human-readable summary of the problem"
-                    },
-                    "detail": {
-                        "type": "string",
-                        "description": "A human-readable explanation specific to this occurrence of the problem"
-                    },
-                    "source": {
-                        "type": "object",
-						"description": "References to the source of the error, e.g. an RFC6901 JSON pointer or a URI query parameter name"
-                    },
-                    "meta": {
-                        "type": "object"
-                    }
-                }
+					},
+					"status": {
+						"type": "string",
+						"description": "The HTTP status code applicable to this problem"
+					},
+					"code": {
+						"type": "string",
+						"description": "An application-specific error code"
+					},
+					"title": {
+						"type": "string",
+						"description": "A short, human-readable summary of the problem"
+					},
+					"detail": {
+						"type": "string",
+						"description": "A human-readable explanation specific to this occurrence of the problem"
+					},
+					"source": {
+						"type": "object",
+						"description": "References to the source of the error, e.g. an RFC6901 JSON pointer or a URI query parameter name",
+						"properties": {
+							"reference": {
+								"type": "string"
+							}
+						}
+					},
+					"meta": {
+						"type": "object",
+						"properties": {
+							"metaData": {
+								"type": "string"
+							}
+						}
+					}
+				}
 			}
 		}
-    }
+	}
 }

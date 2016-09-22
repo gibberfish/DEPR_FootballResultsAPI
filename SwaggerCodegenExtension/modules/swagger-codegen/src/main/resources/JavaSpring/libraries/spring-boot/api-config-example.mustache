@@ -1,0 +1,80 @@
+{
+	"operations" : [
+// CONFIGURATION EXAMPLE. REMOVE ALL COMMENTS FOR IT TO WORK
+		{
+			"operationId" : "checkoutCheckoutIdGET",    // See operation id in ...ServiceImpl.java per-operation methods
+			"responses" : [
+				{
+					"requestParameters" : [				// The list of keys to be matched against incoming request parameters to determine
+						{								//     whether the current response should be returned
+							"name" : "checkout_id",
+							"compare" : "contains",
+							"value" : "123"
+						},
+						{
+							"name" : "brand",			// The name of the parameter as it stands in ...ServiceImpl.java
+							"compare" : "equals",		// [optional] a method to compare "parameterValue" with the value from request,
+														//     can be "contains", "startsWith" or not specified (default is "equals")
+							"value" : "456"				// The value to match against request parameter value
+						}
+					],
+					
+                    // "modelClassName" and "bodyFilePath" can be [optional] in two cases:
+                    //     - dataMocked is set to true
+                    //     - response should have no body
+					"modelClassName" : "Checkout",      // Model to be returned, like Checkout or Error.
+					"bodyFilePath" : "./123.json",      // Relative path to file with response json. It should be valid in
+                                                        //     terms of model class from modelClassName parameter.
+
+					"httpStatusCode" : 500,             // [optional] http status code of response. Default is 200
+					"headers": [                        // [optional] headers array if needed
+						{
+							"header" : "Content-Type",
+							"values" : ["application/json"]
+						}
+					]
+				},
+				{
+					"requestParameters" : [
+						{
+							"name" : "checkout_id",
+							"compare" : "contains",
+							"value" : "245"
+						}
+					],
+					"modelClassName" : "Checkout",
+					"dataMocked" : true,              // [optional] if this parameter is true, no "bodyFilePath" is needed as all data
+                                                        //     gets randomly generated with PODAM lib. Default is false
+					"httpStatusCode" : 200,
+					"headers": [
+						{
+							"header" : "Content-Type",
+							"values" : ["application/json"]
+						}
+					]
+				}
+			]
+		},
+		{
+			"operationId" : "checkoutCheckoutIdPaymentPaymentIdPUT",
+			"responses" : [
+				{
+					"requestParameters" : [
+						{
+							"name" : "basketLink",
+							"compare" : "contains",
+							"value" : "amount: DzItw6at7o"
+						}
+					],
+					"httpStatusCode" : 201,
+					"headers": [
+						{
+							"header" : "Location",
+							"values" : ["adsfasdf"]
+						}
+					]
+				}
+			]
+		}
+	]
+}
