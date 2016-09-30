@@ -1,0 +1,18 @@
+SeasonsApiService
+-----------------
+Remove the extends ApiService
+Remove the .service on the end of the package
+Tidy up imports
+
+SeasonsApi
+----------
+Remove service. from import
+Change factory import to include the Seasons
+Change the use of the factory to include the Seasons
+Tidy up imports
+
+SeasonsApiServiceImpl
+---------------------
+Changed SecurityContext to ContainerRequestContext and import it
+Changed extends SeasonsApiService to implements
+Tidy up imports

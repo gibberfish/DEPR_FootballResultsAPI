@@ -1,0 +1,7 @@
+{
+    "apiPackage": "mindbadger.api",
+    "modelPackage": "mindbadger.model",
+    "invokerPackage": "mindbadger.api",
+    "library": "jersey2",
+    "serializableModel": "yes"
+}

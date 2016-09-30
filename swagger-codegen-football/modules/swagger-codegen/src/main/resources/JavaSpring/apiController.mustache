@@ -26,12 +26,13 @@ import java.util.concurrent.Callable;
 {{>generatedAnnotation}}
 @Controller
 {{#operations}}
+
 public class {{classname}}Controller implements {{classname}} {
 {{^java8}}{{#operation}}
-    public {{#async}}Callable<{{/async}}ResponseEntity<{{>returnTypes}}>{{#async}}>{{/async}} {{operationId}}({{#allParams}}{{>queryParams}}{{>pathParams}}{{>headerParams}}{{>bodyParams}}{{>formParams}}{{#hasMore}},
-        {{/hasMore}}{{/allParams}}) {
+    public {{#async}}Callable<{{/async}}ResponseEntity<{{>returnTypes}}>{{#async}}>{{/async}} {{operationId}}({{#allParams}}{{>queryParams}}{{>pathParams}}{{>headerParams}}{{>bodyParams}}{{>formParams}}{{#hasMore}},{{/hasMore}}{{/allParams}}) {
         // do some magic!{{^async}}
-        return new ResponseEntity<{{>returnTypes}}>(HttpStatus.OK);{{/async}}{{#async}}
+        return new ResponseEntity<{{>returnTypes}}>(HttpStatus.OK);{{/async}}
+        {{#async}}
         return new Callable<ResponseEntity<{{>returnTypes}}>>() {
             @Override
             public ResponseEntity<{{>returnTypes}}> call() throws Exception {
